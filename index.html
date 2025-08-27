@@ -13,6 +13,20 @@
     <meta property="og:image:alt" content="Евгений Сазонов — подготовка к ЕГЭ по обществознанию">
     <title>Евгений Сазонов | Подготовка к ЕГЭ по обществознанию</title>
     
+    <!-- Инициализация темы для предотвращения мигания -->
+    <script>
+        (function() {
+            const savedTheme = localStorage.getItem('theme');
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            
+            if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+        })();
+    </script>
+    
     <!-- Микроразметка Schema.org -->
     <script type="application/ld+json">
     {
@@ -53,7 +67,23 @@
     
     <!-- Подключение скриптов -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        'telegram-blue': '#2563eb',
+                        'telegram-blue-dark': '#1d4ed8',
+                        'profi-red': '#e53e3e',
+                        'profi-red-dark': '#c53030'
+                    }
+                }
+            }
+        }
+    </script>
     <script src="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.js"></script>
+    <script src="assets/js/performance-utils.js"></script>
     <script src="assets/js/scripts.js" defer></script>
     <style>
         /* небольшие критические стили, основное в styles.css */
@@ -65,47 +95,340 @@
 <body class="bg-gray-50 dark:bg-gray-900 dark:text-gray-100 transition-colors duration-300">
 
     <!-- Навигационная панель -->
-    <nav id="main-nav" class="fixed top-0 left-0 w-full z-50 bg-transparent dark:bg-transparent bg-opacity-0 py-3 md:py-4 transition-colors duration-300" role="navigation" aria-label="Основная навигация">
+    <nav id="main-nav" class="fixed top-0 left-0 w-full z-50 bg-white dark:bg-gray-900 py-3 md:py-4 transition-all duration-300" role="navigation" aria-label="Основная навигация">
         <div class="container mx-auto px-4 flex justify-between items-center">
-            <div class="flex items-center min-h-[28px]">
-                <span id="nav-section-title" class="text-sm md:text-base font-semibold text-gray-800 dark:text-gray-100 opacity-0 translate-y-1 transition-all duration-300" aria-live="polite"></span>
+            <div class="flex flex-col min-h-[28px]">
+                <div id="nav-name" class="text-base md:text-lg font-bold text-gray-900 dark:text-gray-100 transition-all duration-300">Евгений Сазонов</div>
+                <div id="nav-subtitle" class="text-xs md:text-sm text-gray-600 dark:text-gray-400 transition-all duration-300">Выпускник Юридического факультета МГУ 2025</div>
+                <span id="nav-section-title" class="text-sm md:text-base font-semibold text-gray-800 dark:text-gray-100 opacity-0 translate-y-1 transition-all duration-300 absolute" aria-live="polite"></span>
             </div>
-                <div class="flex items-center space-x-4">
-                <a href="#contactForm" id="cta-header-desktop" class="btn bg-telegram-blue text-white px-4 py-2 rounded-lg hover:bg-telegram-blue-dark transition-colors">Записаться</a>
-                <!-- menu inlined -->
-                <!-- Меню и иконка удалены -->
+            <div class="flex items-center space-x-3">
+                <!-- Кнопка уведомлений -->
+                <button id="notifications-btn" class="relative p-2 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors" aria-label="Уведомления">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
+                    </svg>
+                    <!-- Индикатор новых уведомлений -->
+                    <span class="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full text-xs flex items-center justify-center text-white" id="notification-badge"></span>
+                </button>
+                
+                <!-- Кнопка меню -->
+                <button id="menu-btn" class="p-2 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors" aria-label="Меню">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+                
+                <button id="cta-header-desktop" class="btn bg-telegram-blue text-white px-4 py-2 rounded-lg hover:bg-telegram-blue-dark transition-all duration-300 flex items-center space-x-2">
+                    <svg id="cta-icon" class="w-4 h-4 transition-all duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H3a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                    </svg>
+                    <span id="cta-text" class="transition-all duration-300">Записаться</span>
+                </button>
             </div>
         </div>
     </nav>
     
-    <!-- Мобильное меню удалено -->
+    <!-- Выпадающее меню - полноэкранное -->
+    <div id="dropdown-menu" class="fixed top-16 left-0 w-full bg-white dark:bg-gray-800 shadow-xl border-t border-gray-200 dark:border-gray-700 z-40 opacity-0 invisible transform -translate-y-4 transition-all duration-300">
+        <div class="container mx-auto px-4 py-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                
+                <!-- Основные действия -->
+                <div class="space-y-4">
+                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="color: #2563eb;">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                        </svg>
+                        Основные действия
+                    </h3>
+                    
+                    <button class="flex items-center px-4 py-3 text-white bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 rounded-xl transition-all duration-200 transform hover:scale-105 shadow-lg w-full" onclick="document.getElementById('cta-header-desktop').click()">
+                        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H3a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                        </svg>
+                        <div>
+                            <div class="font-semibold">Записаться на занятие</div>
+                            <div class="text-xs opacity-80">Пробное занятие бесплатно</div>
+                        </div>
+                    </button>
+                    
+                    <a href="#format" class="flex items-center px-4 py-3 text-gray-700 dark:text-gray-200 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-xl transition-all duration-200">
+                        <span class="text-xl mr-3">💰</span>
+                        <div>
+                            <div class="font-medium">Цены и форматы</div>
+                        </div>
+                    </a>
+                </div>
+                
+                <!-- Социальные сети и связь -->
+                <div class="space-y-4">
+                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="color: #16a34a;">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+                        </svg>
+                        Связь со мной
+                    </h3>
+                    
+                    <a href="https://t.me/evgenii_sazonov" target="_blank" rel="noopener noreferrer" class="flex items-center px-4 py-3 text-white bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 rounded-xl transition-all duration-200 transform hover:scale-105 shadow-lg">
+                        <svg class="w-5 h-5 mr-3" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.13-.31-1.09-.66.02-.18.27-.36.74-.55 2.92-1.27 4.86-2.11 5.83-2.51 2.78-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .38z"></path>
+                        </svg>
+                        <div>
+                            <div class="font-semibold">Telegram</div>
+                            <div class="text-xs opacity-80">Основное место общения</div>
+                        </div>
+                    </a>
+                    
+                    <a href="https://wa.me/79999999999" target="_blank" rel="noopener noreferrer" class="flex items-center px-4 py-3 text-white bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 rounded-xl transition-all duration-200 transform hover:scale-105 shadow-lg">
+                        <svg class="w-5 h-5 mr-3" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893A11.821 11.821 0 0020.885 3.488"></path>
+                        </svg>
+                        <div>
+                            <div class="font-semibold">WhatsApp</div>
+                            <div class="text-xs opacity-80">Если удобнее здесь</div>
+                        </div>
+                    </a>
+                    
+                    <a href="https://profi.ru/profile/SazonovYA6" target="_blank" rel="noopener noreferrer" class="flex items-center px-4 py-3 text-gray-700 dark:text-gray-200 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-xl transition-all duration-200">
+                        <img src="https://i.postimg.cc/MG2M1Wmq/image-1.png" alt="Profi.ru" class="w-5 h-5 mr-3 filter invert dark:invert-0">
+                        <div>
+                            <div class="font-medium">Profi.ru</div>
+                            <div class="text-xs text-gray-500 dark:text-gray-400">Отзывы и рейтинги</div>
+                        </div>
+                    </a>
+                </div>
+                
+                <!-- Навигация по разделам -->
+                <div class="space-y-4">
+                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="color: #7c3aed;">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
+                        </svg>
+                        Разделы сайта
+                    </h3>
+                    
+                    <a href="#about-me" class="flex items-center px-3 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors">
+                        <span class="mr-3">👨‍🏫</span>
+                        Обо мне
+                    </a>
+                    <a href="#benefits" class="flex items-center px-3 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors">
+                        <span class="mr-3">✨</span>
+                        Что вы получаете
+                    </a>
+                    <a href="#format" class="flex items-center px-3 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors">
+                        <span class="mr-3">💰</span>
+                        Формат и цены
+                    </a>
+                    <a href="#testimonials" class="flex items-center px-3 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors">
+                        <span class="mr-3">⭐</span>
+                        Отзывы
+                    </a>
+                    <a href="#student-results" class="flex items-center px-3 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors">
+                        <span class="mr-3">📈</span>
+                        Результаты учеников
+                    </a>
+                    <a href="#faq" class="flex items-center px-3 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors">
+                        <span class="mr-3">❓</span>
+                        Вопросы и ответы
+                    </a>
+                </div>
+                
+                <!-- Дополнительная информация -->
+                <div class="space-y-4">
+                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="color: #dc2626;">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        Информация
+                    </h3>
+                    
+                    <a href="bio.html" class="flex items-center px-3 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors">
+                        <span class="mr-3">📖</span>
+                        Подробная биография
+                    </a>
+                    <a href="#" class="flex items-center px-3 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors">
+                        <span class="mr-3">📰</span>
+                        Обо мне в СМИ
+                    </a>
+                    <a href="#" class="flex items-center px-3 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors">
+                        <span class="mr-3">🔒</span>
+                        Политика конфиденциальности
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Кнопка смены темы -->
+            <div class="border-t border-gray-200 dark:border-gray-700 pt-6 mt-6">
+                <button id="theme-toggle" class="w-full flex items-center justify-center px-4 py-3 text-gray-700 dark:text-gray-200 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-xl transition-all duration-200">
+                    <svg id="theme-icon-light" class="w-5 h-5 mr-3 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                    </svg>
+                    <svg id="theme-icon-dark" class="w-5 h-5 mr-3 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
+                    </svg>
+                    <span class="font-medium">
+                        <span class="block dark:hidden">Темная тема</span>
+                        <span class="hidden dark:block">Светлая тема</span>
+                    </span>
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Панель уведомлений -->
+    <div id="notifications-panel" class="fixed top-16 right-4 w-80 bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-gray-200 dark:border-gray-700 z-40 opacity-0 invisible transform scale-95 transition-all duration-200">
+        <div class="p-4">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100">Уведомления</h3>
+                <button id="clear-notifications" class="text-sm text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200">Очистить</button>
+            </div>
+            <div id="notifications-list" class="space-y-3 max-h-80 overflow-y-auto">
+                <!-- Уведомления пока отсутствуют -->
+                <div class="text-center py-8">
+                    <svg class="w-12 h-12 mx-auto text-gray-300 dark:text-gray-600 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
+                    </svg>
+                    <p class="text-gray-500 dark:text-gray-400">Пока нет уведомлений</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Модальное окно записи -->
+    <div id="booking-modal" class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm z-[60] opacity-0 invisible transition-all duration-300 flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl max-w-md w-full max-h-[90vh] overflow-y-auto transform scale-95 transition-all duration-300">
+            <!-- Заголовок модального окна -->
+            <div class="p-6 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
+                <div>
+                    <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Записаться на занятие</h2>
+                    <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">Пробное занятие бесплатно</p>
+                </div>
+                <button id="close-modal" class="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors">
+                    <svg class="w-6 h-6 text-gray-500 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            </div>
 
-    <!-- Основной контент -->
+            <!-- Форма записи -->
+            <div class="p-6">
+                <form id="modal-booking-form" class="space-y-4">
+                    <div>
+                        <label for="modal-name" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Имя</label>
+                        <input type="text" id="modal-name" name="name" required 
+                               class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white transition-colors"
+                               placeholder="Ваше имя">
+                    </div>
+
+                    <div>
+                        <label for="modal-phone" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Номер телефона</label>
+                        <input type="tel" id="modal-phone" name="phone" required 
+                               class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white transition-colors"
+                               placeholder="+7 (999) 123-45-67">
+                    </div>
+
+                    <div>
+                        <label for="modal-date" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Предпочтительная дата</label>
+                        <input type="date" id="modal-date" name="date" 
+                               class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white transition-colors">
+                    </div>
+
+                    <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors duration-200 flex items-center justify-center">
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                        </svg>
+                        Оставить заявку
+                    </button>
+                </form>
+
+                <!-- Кнопки связи -->
+                <div class="mt-6 grid grid-cols-2 gap-3">
+                    <a href="https://t.me/evgenii_sazonov" target="_blank" rel="noopener noreferrer" 
+                       class="flex items-center justify-center px-4 py-3 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-colors duration-200">
+                        <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.13-.31-1.09-.66.02-.18.27-.36.74-.55 2.92-1.27 4.86-2.11 5.83-2.51 2.78-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .38z"/>
+                        </svg>
+                        Telegram
+                    </a>
+                    <a href="https://wa.me/79999999999" target="_blank" rel="noopener noreferrer" 
+                       class="flex items-center justify-center px-4 py-3 bg-green-500 hover:bg-green-600 text-white rounded-lg transition-colors duration-200">
+                        <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893A11.821 11.821 0 0020.885 3.488"></path>
+                        </svg>
+                        WhatsApp
+                    </a>
+                </div>
+
+                <!-- Кнопка к ценам -->
+                <div class="mt-4">
+                    <a href="#pricing" class="w-full flex items-center justify-center px-4 py-3 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg transition-colors duration-200">
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
+                        </svg>
+                        Посмотреть цены и форматы
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Мобильное меню удалено -->    <!-- Основной контент -->
     <main class="space-y-12 lg:space-y-16" role="main">
 
         <!-- Герой-секция -->
-    <section id="hero" class="relative w-full hero-full bg-cover bg-center md:bg-fixed flex items-end md:items-center section-animate" style="background-image: url('https://i.postimg.cc/tTgrWQbR/photo-5242688122792310119-y-1.png');" aria-label="Подготовка к ЕГЭ по обществознанию">
-            <!-- Градиентное затемнение для лучшей читаемости текста -->
-            <div class="hero-overlay absolute inset-0"></div>
-
+    <section id="hero" class="relative w-full min-h-[80vh] bg-white dark:bg-gray-900 flex items-center section-animate pt-8" aria-label="Подготовка к ЕГЭ по обществознанию">
             <div class="container mx-auto px-4 relative z-10 w-full">
-                <div class="max-w-3xl text-left glass-card text-white p-6 sm:p-7 md:p-8 rounded-2xl shadow-2xl mb-24 md:mb-0">
-                    <p class="mb-3 inline-block text-xs sm:text-sm font-medium tracking-wide uppercase text-white/90">
-                        Подготовка к ЕГЭ по обществознанию
-                    </p>
-                    <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold leading-tight">
-                        Евгений Сазонов — выпускник Юридического факультета МГУ
+                <!-- Левосторонний дизайн -->
+                <div class="max-w-4xl text-left text-gray-900 dark:text-white py-12">
+                    
+                    <!-- Основной заголовок -->
+                    <h1 class="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-black leading-tight mb-6">
+                        <span class="block text-gray-900 dark:text-white">Помогу вам подготовиться к</span>
+                        <span class="block bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent" style="background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%); -webkit-background-clip: text; background-clip: text;">ЕГЭ или ОГЭ</span>
+                        <span class="block text-gray-900 dark:text-white">по обществознанию</span>
                     </h1>
-                    <p class="mt-3 text-base sm:text-lg md:text-2xl lg:text-3xl font-light text-white/95">
-                        +10 баллов уже за первую неделю занятий
+                    
+                    <!-- Описание -->
+                    <p class="text-lg sm:text-xl text-gray-700 dark:text-gray-300 mb-8 max-w-3xl">
+                        Гарантированный рост баллов с первой недели. Авторская методика в мини-группах до 5 человек. Опыт с 2018 года.
                     </p>
+                    
+                    <!-- Бейдж с достижением -->
+                    <div class="inline-flex items-center gap-2 bg-gradient-to-r from-yellow-400/20 to-orange-500/20 border border-yellow-400/50 rounded-full px-4 py-2 mb-8">
+                        <span class="text-yellow-600 text-lg">🏆</span>
+                        <span class="text-sm font-semibold text-yellow-800 dark:text-yellow-200">100% учеников повышают баллы на 20-40</span>
+                    </div>
+                    
+                    <!-- CTA кнопки - центрированные -->
+                    <div class="flex flex-col sm:flex-row gap-4 mb-8 justify-center">
+                        <a href="#contactForm" class="hero-cta-primary btn bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white px-8 py-4 rounded-xl font-bold text-lg shadow-xl transform hover:scale-105 transition-all duration-200">
+                            🎯 Записаться на пробное занятие
+                        </a>
+                        <a href="#format" class="hero-cta-secondary btn bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white px-8 py-4 rounded-xl font-semibold text-lg transition-all duration-200">
+                            💰 Цены
+                        </a>
+                        <a href="#testimonials" class="hero-cta-tertiary btn bg-white hover:bg-gray-50 dark:bg-gray-800 dark:hover:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white px-8 py-4 rounded-xl font-semibold text-lg transition-all duration-200">
+                            ⭐ Отзывы
+                        </a>
+                    </div>
+                    
+                    <!-- Доверительные элементы - центрированные -->
+                    <div class="flex flex-wrap justify-center gap-4 text-sm">
+                        <div class="flex items-center gap-2 bg-gray-100 dark:bg-gray-700 rounded-full px-3 py-1.5">
+                            <span class="text-green-500">✓</span>
+                            <span class="text-gray-700 dark:text-gray-300">Опыт с 2018 года</span>
+                        </div>
+                        <div class="flex items-center gap-2 bg-gray-100 dark:bg-gray-700 rounded-full px-3 py-1.5">
+                            <span class="text-green-500">✓</span>
+                            <span class="text-gray-700 dark:text-gray-300">Первое занятие бесплатно</span>
+                        </div>
+                        <div class="flex items-center gap-2 bg-gray-100 dark:bg-gray-700 rounded-full px-3 py-1.5">
+                            <span class="text-green-500">✓</span>
+                            <span class="text-gray-700 dark:text-gray-300">Результат уже через неделю</span>
+                        </div>
+                    </div>
                 </div>
-            </div>
-
-            <!-- Индикатор прокрутки -->
-            <div class="scroll-indicator flex z-10" aria-hidden="true">
-                <span class="mr-2">Прокрутите вниз</span>
-                <span class="chevron">⌄</span>
             </div>
         </section>
 
@@ -133,7 +456,12 @@
                         <img src="https://i.postimg.cc/MG2M1Wmq/image-1.png" alt="Profi.ru" class="w-5 h-5 mr-2 filter invert">Перейти на Profi.ru
                     </a>
                     <a href="https://t.me/evgenii_sazonov" target="_blank" rel="noopener noreferrer" class="btn inline-flex items-center justify-center px-4 py-2.5 rounded-lg bg-telegram-blue text-white font-semibold hover:bg-telegram-blue-dark transition-colors">
-                        <img src="https://i.postimg.cc/mZ5rQLTJ/image-2.png" alt="Telegram" class="w-5 h-5 mr-2">Связаться со мной
+                        <img src="https://i.postimg.cc/mZ5rQLTJ/image-2.png" alt="Telegram" class="w-5 h-5 mr-2">Связаться в Telegram
+                    </a>
+                    <a href="https://wa.me/79999999999" target="_blank" rel="noopener noreferrer" class="btn inline-flex items-center justify-center px-4 py-2.5 rounded-lg bg-green-500 text-white font-semibold hover:bg-green-600 transition-colors">
+                        <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893A11.821 11.821 0 0020.885 3.488"></path>
+                        </svg>Написать в WhatsApp
                     </a>
                     <a href="bio.html" class="btn inline-flex items-center justify-center px-4 py-2.5 rounded-lg border border-gray-300 dark:border-gray-600 text-gray-800 dark:text-gray-100 font-semibold hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">Подробнее</a>
                 </div>
@@ -317,10 +645,7 @@
                         <div class="text-3xl md:text-4xl font-extrabold text-gray-800 dark:text-gray-100">Бесплатно</div>
                         <p class="mt-2 text-gray-700 dark:text-gray-300 max-w-2xl">Познакомимся с форматом, оценим текущий уровень и наметим план подготовки. Ответы на вопросы — сразу на месте.</p>
                     </div>
-                    <div class="grid grid-cols-2 gap-3 mt-5">
-                        <a class="btn inline-flex items-center justify-center px-4 py-2.5 rounded-lg bg-telegram-blue text-white hover:bg-telegram-blue-dark" href="https://t.me/evgenii_sazonov" target="_blank" rel="noopener noreferrer">Telegram</a>
-                        <a class="btn inline-flex items-center justify-center px-4 py-2.5 rounded-lg bg-green-500 text-white hover:bg-green-600" href="https://wa.me/79999999999" target="_blank" rel="noopener noreferrer">WhatsApp</a>
-                    </div>
+
 
                     <!-- Компактная форма заявки -->
                     <form id="contactForm" class="mt-5 grid grid-cols-1 md:grid-cols-3 gap-3">
@@ -353,14 +678,22 @@
                         <div class="text-2xl font-extrabold text-gray-900 dark:text-gray-100">32 000 ₽</div>
                     </div>
                 </div>
-                <p class="text-sm text-gray-600 dark:text-gray-400">Первая группа укомлпектована, во второй осталось 4 места.</p>
+                
+                <!-- Dynamic Format Banner (managed from dashboard) -->
+                <div id="format-banner-container" class="mt-4"></div>
+                
+                <!-- Contact Buttons -->
+                <div class="grid grid-cols-2 gap-3 mt-4">
+                    <a class="btn inline-flex items-center justify-center px-4 py-2.5 rounded-lg bg-telegram-blue text-white hover:bg-telegram-blue-dark" href="https://t.me/evgenii_sazonov" target="_blank" rel="noopener noreferrer">Telegram</a>
+                    <a class="btn inline-flex items-center justify-center px-4 py-2.5 rounded-lg bg-green-500 text-white hover:bg-green-600" href="https://wa.me/79999999999" target="_blank" rel="noopener noreferrer">WhatsApp</a>
+                </div>
             </div>
         </section>
 
     <!-- Кнопка Profi.ru перемещена в блок "Обо мне" -->
 
         <!-- Отзывы учеников -->
-        <section class="container mx-auto px-4 section-animate">
+        <section id="testimonials" class="container mx-auto px-4 section-animate">
             <h2 class="text-left text-2xl md:text-4xl font-bold mb-6 md:mb-8 text-gray-800 dark:text-gray-100">
                 Отзывы моих учеников
             </h2>
@@ -411,6 +744,82 @@
                     </div>
                     <div class="swiper-pagination"></div>
                 </div>
+        </section>
+
+        <!-- Результаты учеников -->
+        <section id="student-results" class="container mx-auto px-4 section-animate">
+            <h2 class="text-left text-2xl md:text-4xl font-bold mb-6 md:mb-8 text-gray-800 dark:text-gray-100">
+                Результаты моих учеников
+            </h2>
+            
+            <div class="p-8 md:p-12 rounded-3xl border shadow-xl" style="background: linear-gradient(135deg, rgba(37, 99, 235, 0.05) 0%, rgba(29, 78, 216, 0.08) 50%, rgba(30, 64, 175, 0.05) 100%); border-color: rgba(37, 99, 235, 0.15);">
+                <!-- Статистика в сетке -->
+                <div class="grid grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8 mb-8">
+                    <div class="text-center">
+                        <div class="text-4xl lg:text-5xl font-black text-yellow-500 mb-2">90+</div>
+                        <div class="text-sm lg:text-base text-gray-700 dark:text-gray-300">баллов ЕГЭ-2025</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-4xl lg:text-5xl font-black text-green-500 mb-2">100%</div>
+                        <div class="text-sm lg:text-base text-gray-700 dark:text-gray-300">рост результата</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-4xl lg:text-5xl font-black mb-2" style="color: #2563eb;">7</div>
+                        <div class="text-sm lg:text-base text-gray-700 dark:text-gray-300">лет опыта</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-4xl lg:text-5xl font-black text-purple-500 mb-2">4-5</div>
+                        <div class="text-sm lg:text-base text-gray-700 dark:text-gray-300">чел. в группе</div>
+                    </div>
+                </div>
+                
+                <!-- Прогресс бар примера -->
+                <div class="bg-white/60 dark:bg-gray-700/60 backdrop-blur-sm rounded-2xl p-6 mb-6">
+                    <div class="flex justify-between items-center mb-3">
+                        <span class="text-gray-800 dark:text-gray-200 font-semibold">Средний рост баллов</span>
+                        <span class="text-green-600 dark:text-green-400 font-bold text-lg">+30 баллов</span>
+                    </div>
+                    <div class="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-4">
+                        <div class="h-4 rounded-full progress-bar shadow-sm" style="width: 75%; background: linear-gradient(90deg, #22c55e 0%, #2563eb 100%);"></div>
+                    </div>
+                    <div class="flex justify-between text-sm text-gray-600 dark:text-gray-400 mt-2">
+                        <span>40 баллов</span>
+                        <span>70 баллов</span>
+                    </div>
+                </div>
+                
+                <!-- Ключевые достижения -->
+                <div class="grid md:grid-cols-2 gap-4">
+                    <div class="flex items-center gap-4 bg-white/60 dark:bg-gray-700/60 backdrop-blur-sm rounded-xl p-4">
+                        <span class="text-3xl">🏆</span>
+                        <div>
+                            <div class="font-bold text-gray-800 dark:text-gray-200">Высокие результаты</div>
+                            <div class="text-sm text-gray-600 dark:text-gray-400">От 50-60 до 85-95 баллов за год</div>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-4 bg-white/60 dark:bg-gray-700/60 backdrop-blur-sm rounded-xl p-4">
+                        <span class="text-3xl">📈</span>
+                        <div>
+                            <div class="font-bold text-gray-800 dark:text-gray-200">Гарантированный рост</div>
+                            <div class="text-sm text-gray-600 dark:text-gray-400">Увидите прогресс уже через неделю</div>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-4 bg-white/60 dark:bg-gray-700/60 backdrop-blur-sm rounded-xl p-4">
+                        <span class="text-3xl">👥</span>
+                        <div>
+                            <div class="font-bold text-gray-800 dark:text-gray-200">Мини-группы</div>
+                            <div class="text-sm text-gray-600 dark:text-gray-400">Максимальное внимание каждому</div>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-4 bg-white/60 dark:bg-gray-700/60 backdrop-blur-sm rounded-xl p-4">
+                        <span class="text-3xl">📚</span>
+                        <div>
+                            <div class="font-bold text-gray-800 dark:text-gray-200">Авторская методика</div>
+                            <div class="text-sm text-gray-600 dark:text-gray-400">Проверенная на практике с 2018 года</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </section>
 
         <!-- Ответы на частые вопросы -->
@@ -464,46 +873,156 @@
 
 
         <!-- Кнопка наверх -->
-        <button id="scrollToTopBtn" class="fixed bottom-8 right-8 z-50 bg-telegram-blue text-white rounded-full p-3 shadow-lg hover:bg-telegram-blue-dark transition-colors duration-300" style="display:none;">
-            ↑
+        <button id="scrollToTopBtn" class="scroll-to-top fixed bottom-6 right-6 z-50 w-14 h-14 bg-telegram-blue text-white rounded-full shadow-xl hover:bg-telegram-blue-dark hover:shadow-2xl transform hover:scale-110 active:scale-95 transition-all duration-300 flex items-center justify-center opacity-0 invisible translate-y-4" aria-label="Вернуться наверх">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"/>
+            </svg>
         </button>
 
         <!-- Футер -->
-        <footer class="bg-gray-900 text-white py-12">
-            <div class="container mx-auto px-4 grid grid-cols-1 md:grid-cols-4 gap-8">
+        <footer class="bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-white py-12">
+            <div class="container mx-auto px-4 grid grid-cols-1 md:grid-cols-5 gap-8 items-start">
+                <!-- Навигация по разделам -->
                 <div>
-                    <ul class="space-y-2">
-                        <li><a href="#about-me" class="hover:underline">Почему мне доверяют</a></li>
-                        <li><a href="#benefits" class="hover:underline">Что вы получаете</a></li>
-                        <li><a href="#format" class="hover:underline">Формат занятий</a></li>
-                        <li><a href="#faq" class="hover:underline">FAQ</a></li>
-                        <li><a href="#contactForm" class="hover:underline">Записаться</a></li>
+                    <h3 class="flex items-center text-lg font-semibold mb-4 text-gray-900 dark:text-white">
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="color: #2563eb;">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
+                        </svg>
+                        Разделы
+                    </h3>
+                    <ul class="space-y-3">
+                        <li><a href="#about-me" class="flex items-center text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors hover:underline">
+                            <span class="mr-2 text-sm">👨‍🏫</span>
+                            Почему мне доверяют
+                        </a></li>
+                        <li><a href="#benefits" class="flex items-center text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors hover:underline">
+                            <span class="mr-2 text-sm">✨</span>
+                            Что вы получаете
+                        </a></li>
+                        <li><a href="#format" class="flex items-center text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors hover:underline">
+                            <span class="mr-2 text-sm">💰</span>
+                            Формат занятий
+                        </a></li>
+                        <li><a href="#faq" class="flex items-center text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors hover:underline">
+                            <span class="mr-2 text-sm">❓</span>
+                            FAQ
+                        </a></li>
+                        <li><a href="#contactForm" class="flex items-center text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors hover:underline">
+                            <span class="mr-2 text-sm">📝</span>
+                            Записаться
+                        </a></li>
                     </ul>
                 </div>
+                
+                <!-- Разделитель -->
+                <div class="hidden md:flex items-center justify-center">
+                    <div class="w-px h-32 bg-gray-300 dark:bg-gray-600"></div>
+                </div>
+                
+                <!-- Контакты -->
                 <div>
-                    <ul class="space-y-2">
-                        <li><a href="mailto:evsa16@mail.ru" class="hover:underline">evsa16@mail.ru</a></li>
-                        <li><a href="https://t.me/evgenii_sazonov" target="_blank" rel="noopener noreferrer" class="hover:underline">Telegram</a></li>
-                        <li><a href="https://profi.ru/profile/SazonovYA6" target="_blank" rel="noopener noreferrer" class="hover:underline">Profi.ru</a></li>
+                    <h3 class="flex items-center text-lg font-semibold mb-4 text-gray-900 dark:text-white">
+                        <svg class="w-5 h-5 mr-2 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21L6.16 10.55a11.019 11.019 0 004.445 4.445l1.163-4.064a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path>
+                        </svg>
+                        Контакты
+                    </h3>
+                    <ul class="space-y-3">
+                        <li><a href="mailto:evsa16@mail.ru" class="flex items-center text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors hover:underline">
+                            <svg class="w-4 h-4 mr-2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 7.89a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                            </svg>
+                            evsa16@mail.ru
+                        </a></li>
+                        <li><a href="https://t.me/evgenii_sazonov" target="_blank" rel="noopener noreferrer" class="flex items-center text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors hover:underline">
+                            <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 24 24" style="color: #2563eb;">
+                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.13-.31-1.09-.66.02-.18.27-.36.74-.55 2.92-1.27 4.86-2.11 5.83-2.51 2.78-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .38z"></path>
+                            </svg>
+                            Telegram
+                        </a></li>
+                        <li><a href="https://profi.ru/profile/SazonovYA6" target="_blank" rel="noopener noreferrer" class="flex items-center text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors hover:underline">
+                            <svg class="w-4 h-4 mr-2 text-red-500" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
+                            </svg>
+                            Profi.ru
+                        </a></li>
                     </ul>
                 </div>
-                <div>
-                    <ul class="space-y-2">
-                        <li><a href="#" class="hover:underline">Обо мне в СМИ</a></li>
-                    </ul>
+                
+                <!-- Разделитель -->
+                <div class="hidden md:flex items-center justify-center">
+                    <div class="w-px h-32 bg-gray-300 dark:bg-gray-600"></div>
                 </div>
+                
+                <!-- Дополнительно -->
                 <div>
-                    <ul class="space-y-2">
-                        <li><a href="#" class="hover:underline">Политика обработки персональных данных</a></li>
+                    <h3 class="flex items-center text-lg font-semibold mb-4 text-gray-900 dark:text-white">
+                        <svg class="w-5 h-5 mr-2 text-purple-600 dark:text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        Дополнительно
+                    </h3>
+                    <ul class="space-y-3 mb-6">
+                        <li><a href="#" class="flex items-center text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors hover:underline">
+                            <svg class="w-4 h-4 mr-2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"></path>
+                            </svg>
+                            Обо мне в СМИ
+                        </a></li>
+                        <li><a href="#" class="flex items-center text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors hover:underline">
+                            <svg class="w-4 h-4 mr-2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+                            </svg>
+                            Политика конфиденциальности
+                        </a></li>
                     </ul>
-                    <div class="flex space-x-4 mt-6">
-                        <a href="https://t.me/evgenii_sazonov" target="_blank" rel="noopener noreferrer" class="hover:scale-110 transition-transform"><img src="https://i.postimg.cc/mZ5rQLTJ/image-2.png" alt="Telegram" class="w-8 h-8"></a>
-                        <a href="https://profi.ru/profile/SazonovYA6" target="_blank" rel="noopener noreferrer" class="hover:scale-110 transition-transform"><img src="https://i.postimg.cc/MG2M1Wmq/image-1.png" alt="Profi.ru" class="w-8 h-8"></a>
+                    
+                    <!-- Социальные сети -->
+                    <div class="space-y-3">
+                        <h4 class="flex items-center text-sm font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wide">
+                            <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.94-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/>
+                            </svg>
+                            Следите за обновлениями
+                        </h4>
+                        <div class="flex space-x-3">
+                            <a href="https://t.me/evgenii_sazonov" target="_blank" rel="noopener noreferrer" 
+                               class="group p-2 rounded-lg transition-colors shadow-sm hover:shadow-md" style="background-color: #2563eb; color: white;">
+                                <img src="https://i.postimg.cc/mZ5rQLTJ/image-2.png" alt="Telegram" class="w-6 h-6 group-hover:scale-110 transition-transform">
+                            </a>
+                            <a href="https://profi.ru/profile/SazonovYA6" target="_blank" rel="noopener noreferrer" 
+                               class="group bg-red-500 hover:bg-red-600 p-2 rounded-lg transition-colors shadow-sm hover:shadow-md">
+                                <img src="https://i.postimg.cc/MG2M1Wmq/image-1.png" alt="Profi.ru" class="w-6 h-6 filter invert group-hover:scale-110 transition-transform">
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <!-- Панель управления - только ссылка -->
+                    <div class="space-y-3">
+                        <a href="dashboard.html" class="flex items-center text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors text-sm">
+                            <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                            </svg>
+                            Панель управления
+                        </a>
                     </div>
                 </div>
             </div>
-            <div class="container mx-auto px-4 mt-8 text-left text-sm text-gray-200">
-                &copy; Евгений Сазонов, 2025
+            
+            <!-- Разделитель перед копирайтом -->
+            <div class="container mx-auto px-4 mt-8">
+                <hr class="border-gray-300 dark:border-gray-600 mb-6">
+                <div class="flex flex-col md:flex-row justify-between items-center text-sm text-gray-500 dark:text-gray-400">
+                    <div class="flex items-center mb-4 md:mb-0">
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"></path>
+                        </svg>
+                        &copy; Евгений Сазонов, 2025. Все права защищены.
+                    </div>
+                    <div class="text-center md:text-right">
+                        <span class="text-xs">Подготовка к ЕГЭ/ОГЭ по обществознанию</span>
+                    </div>
+                </div>
             </div>
         </footer>
 
@@ -512,13 +1031,6 @@
     <!-- Прелоадер -->
     <div class="preloader">
         <div class="loader"></div>
-    </div>
-
-    <!-- Мобильный фиксированный CTA -->
-    <div class="fixed bottom-0 left-0 right-0 z-40 md:hidden" aria-hidden="false">
-        <div class="mx-auto max-w-screen-xl px-4 pb-3">
-        <a href="#contactForm" class="btn block text-center bg-telegram-blue text-white py-3 rounded-t-xl shadow-lg hover:bg-telegram-blue-dark transition-colors">Записаться на пробное</a>
-        </div>
     </div>
 
     <!-- Toast container -->
